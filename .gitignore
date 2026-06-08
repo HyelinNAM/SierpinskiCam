@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# Local/model artifacts
+checkpoints/**/*.safetensors
+checkpoints/**/*.ckpt
+checkpoints/**/*.pt
+checkpoints/**/*.pth
+checkpoints/**/*.bin
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+
+# Generated data/outputs; keep tracked placeholders
+outputs/**
+!outputs/.gitkeep
+data/**
+!data/.gitkeep
+!data/README.md
+
+# Media/results/logs
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.npz
+*.npy
+*.csv
+*.jsonl
+*.log
+slurm-*.out
+
+# Internal/private folders that must not enter public releases
+.omx/
+.omc/
+.ai/
+.vscode/
+codex-project/
+analysis_outputs/
+texture_cache/
+
+# Private papers/rebuttals
+*.pdf

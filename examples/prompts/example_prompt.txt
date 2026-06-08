@@ -1,0 +1,12 @@
+# Minimal Musubi/Wan prompt file for SierpinskiCam smoke inference.
+# Adjust prompt text and sampling parameters as needed for your checkpoint.
+
+positive prompt: high quality video, natural motion, detailed scene
+negative prompt: low quality, blurry, distorted
+width: 832
+height: 480
+frame_count: 49
+sample_steps: 30
+guidance_scale: 5.0
+cfg_scale: 1.0
+discrete_flow_shift: 14.5
