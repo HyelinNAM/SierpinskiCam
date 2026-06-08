@@ -1,12 +1,17 @@
 # SierpinskiCam
 
-This repository is the inference-first code release for the SierpinskiCam paper. It is designed to accompany the paper release and to let external users run the core pipeline:
+Official inference code release for the SierpinskiCam paper.
 
-1. Generate a camera trajectory JSON.
-2. Generate SierpinskiCam conditioning/data for the method.
-3. Download checkpoints from public links and run one example inference video.
+SierpinskiCam is released here as a **paper-accompanying inference codebase**: the repository is meant to help researchers generate the method's camera/conditioning inputs, load the released checkpoints, and run video inference. It is intentionally not a full training or paper-metric reproduction repository.
 
-The codebase is derived from the Musubi/Wan inference stack plus SierpinskiCam-specific conditioning and inference helpers. It intentionally does **not** include training runs, paper metric reproduction, baseline experiment scripts, SLURM jobs, generated videos, model weights, logs, or internal paper/rebuttal artifacts.
+## What you can run
+
+The public workflow is:
+
+1. **Generate camera trajectories** in the `camera_path.json` format used by the method.
+2. **Generate SierpinskiCam conditioning/data** (`rgb`, `dense_tx`, and first-frame `img`) from an image-sequence dataset.
+3. **Optionally cache prompt/text embeddings** for the target scenes.
+4. **Run checkpoint-based inference** to produce an output video for at least one example scene.
 
 ## Repository layout
 
@@ -14,40 +19,48 @@ The codebase is derived from the Musubi/Wan inference stack plus SierpinskiCam-s
 SierpinskiCam/
   README.md
   pyproject.toml
-  src/musubi_tuner/                       # core Wan/Musubi inference package used by SierpinskiCam
+  src/musubi_tuner/                       # Musubi/Wan inference stack used by SierpinskiCam
   scripts/
-    generate_camera_path.py               # writes data/camera_path.json
-    create_sierpinskicam_conditioning.py   # creates rgb/dense_tx conditioning videos
-    run_sierpinskicam_inference.py         # runs checkpoint-based video inference
-  examples/prompts/example_prompt.txt
-  checkpoints/README.md                   # external checkpoint download placeholders
-  docs/                                   # upstream Musubi/Wan reference docs
-  data/                                   # local inputs/generated conditioning; ignored except .gitkeep
-  outputs/                                # generated videos/latents; ignored except .gitkeep
+    generate_camera_path.py               # camera_path.json generator
+    create_sierpinskicam_conditioning.py   # conditioning/data generator
+    cache_sierpinskicam_text.py            # optional prompt/text-encoder cache helper
+    run_sierpinskicam_inference.py         # one-video or batch inference
+  examples/prompts/example_prompt.txt      # minimal prompt file
+  checkpoints/README.md                    # external checkpoint download instructions
+  docs/                                    # upstream Musubi/Wan reference docs
+  data/                                    # local inputs/conditioning workspace (git-ignored)
+  outputs/                                 # generated videos/latents (git-ignored)
 ```
 
 ## Installation
 
-Python 3.10+ is recommended. Install the base package with a CUDA-enabled PyTorch extra appropriate for your machine:
+Python `>=3.10,<3.13` is required.
 
 ```bash
 git clone <PUBLIC_REPO_URL> SierpinskiCam
 cd SierpinskiCam
+```
 
-# Example using uv and CUDA 12.4 wheels
+Install a CUDA-enabled PyTorch build that matches your system, then install the package:
+
+```bash
+# Option A: uv with CUDA 12.4 wheels
 uv sync --extra cu124
 
-# or with pip after installing a compatible torch/torchvision build
+# Option B: uv with CUDA 12.8 wheels
+uv sync --extra cu128
+
+# Option C: pip after installing a compatible torch/torchvision build
 pip install -e .
 ```
 
-For SierpinskiCam conditioning generation you also need the external geometry/depth stack used by the paper pipeline:
+For conditioning generation, install the external geometry/depth dependencies used by the paper pipeline:
 
 - Depth-Anything-3, importable as `depth_anything_3`
 - TrajectoryCrafter `models/` directory containing `utils.Warper`
-- MoviePy / ffmpeg for writing videos
+- MoviePy/ffmpeg for video writing
 
-If these are installed separately, point the conditioning script to TrajectoryCrafter with:
+Point the conditioning script to TrajectoryCrafter with either `--trajectorycrafter-models` or:
 
 ```bash
 export TRAJECTORYCRAFTER_MODELS=/path/to/TrajectoryCrafter/models
@@ -55,9 +68,9 @@ export TRAJECTORYCRAFTER_MODELS=/path/to/TrajectoryCrafter/models
 
 ## Checkpoints
 
-Weights are not committed to this repository. Download them from the public links released with the paper and follow `checkpoints/README.md`.
+Weights are **not** committed to this repository. Download the public checkpoints released with the paper and follow `checkpoints/README.md`.
 
-Expected local layout if using `SIERPINSKICAM_CHECKPOINT_DIR`:
+Expected local layout if you want to use `--checkpoint-root`:
 
 ```text
 checkpoints/
@@ -67,17 +80,19 @@ checkpoints/
   lora/sierpinskicam.safetensors
 ```
 
+Then set:
+
 ```bash
 export SIERPINSKICAM_CHECKPOINT_DIR=$PWD/checkpoints
 ```
 
-You can also pass `--vae`, `--t5`, `--dit`, and `--network-weights` explicitly to the inference script.
+You can also pass all paths explicitly with `--vae`, `--t5`, `--dit`, and `--network-weights`.
 
-## End-to-end smoke workflow
+## Quickstart: end-to-end inference
 
-The commands below show the intended public smoke path. Replace dataset/checkpoint paths with your local downloads.
+The commands below are the intended smoke path for a clean checkout. Replace placeholder paths with your local dataset and checkpoint locations.
 
-### 1. Generate camera paths
+### 1. Generate camera trajectories
 
 ```bash
 python scripts/generate_camera_path.py \
@@ -85,9 +100,9 @@ python scripts/generate_camera_path.py \
   --total-frames 81
 ```
 
-### 2. Generate SierpinskiCam conditioning/data
+### 2. Prepare input frames
 
-Prepare an input frame dataset as one directory per scene:
+Create one folder per scene under `data/input_frames/`:
 
 ```text
 data/input_frames/
@@ -97,7 +112,9 @@ data/input_frames/
     ...
 ```
 
-Then create conditioning for one camera and one scene:
+The conditioning script uses the first `--frame-count` frames (`49` by default). Use `--pad-short-scenes` only if you intentionally want to repeat the final frame for short clips.
+
+### 3. Generate SierpinskiCam conditioning/data
 
 ```bash
 python scripts/create_sierpinskicam_conditioning.py \
@@ -110,22 +127,35 @@ python scripts/create_sierpinskicam_conditioning.py \
   --save-outputs rgb,dense_tx
 ```
 
-This writes files such as:
+Expected files:
 
 ```text
 data/conditioning/cam01/rgb/sample_scene.mp4
 data/conditioning/cam01/dense_tx/sample_scene.mp4
-```
-
-The inference script also expects a first-frame image under `img/`. If your conditioning generator did not create it, place one manually:
-
-```text
 data/conditioning/cam01/img/sample_scene.jpg
 ```
 
-### 3. Run one-video inference
+### 4. Optional: cache prompt/text embeddings
 
-First validate paths without importing CUDA/model code:
+Inference can encode the prompt on the fly. For repeated runs, precompute a scene cache first:
+
+```bash
+python scripts/cache_sierpinskicam_text.py \
+  --t5 "$SIERPINSKICAM_CHECKPOINT_DIR/text_encoders/umt5-xxl-enc-fp8_e4m3fn-kijai.safetensors" \
+  --output-dir data/text_cache \
+  --scenes sample_scene \
+  --prompt-file examples/prompts/example_prompt.txt
+```
+
+This writes:
+
+```text
+data/text_cache/sample_scene_wan_te.safetensors
+```
+
+Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
+
+### 5. Validate inference paths without loading models
 
 ```bash
 python scripts/run_sierpinskicam_inference.py \
@@ -133,11 +163,14 @@ python scripts/run_sierpinskicam_inference.py \
   --output-dir outputs/smoke_cam01 \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR" \
   --prompt-file examples/prompts/example_prompt.txt \
+  --te-cache data/text_cache \
   --only-video sample_scene \
   --check-only
 ```
 
-Then run inference in a GPU environment:
+### 6. Run one-video inference
+
+Run this in a GPU environment after downloading checkpoints:
 
 ```bash
 python scripts/run_sierpinskicam_inference.py \
@@ -145,6 +178,7 @@ python scripts/run_sierpinskicam_inference.py \
   --output-dir outputs/smoke_cam01 \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR" \
   --prompt-file examples/prompts/example_prompt.txt \
+  --te-cache data/text_cache \
   --only-video sample_scene \
   --max-videos 1 \
   --sample-steps 30 \
@@ -157,39 +191,59 @@ Expected output:
 outputs/smoke_cam01/sample_scene.mp4
 ```
 
-## Quick validation commands
+If you only want to check latent generation first, add `--no-decode`.
 
-These commands should work on a clean checkout without model downloads:
+## Command reference
+
+```bash
+python scripts/generate_camera_path.py --help
+python scripts/create_sierpinskicam_conditioning.py --help
+python scripts/run_sierpinskicam_inference.py --help
+```
+
+Useful inference options:
+
+- `--guidance dense_tx`: conditioning folder name under `--base-path`
+- `--reference rgb`: reference-video folder name under `--base-path`
+- `--te-cache <dir>`: optional text-encoder cache containing `<scene>_wan_te.safetensors`
+- `--only-video <scene>`: run one named scene
+- `--max-videos N`: cap the number of processed scenes
+- `--no-decode`: save latents only
+- `--check-only`: validate paths and exit before CUDA/model imports
+
+## Validation checklist
+
+These checks should pass without downloading model weights:
 
 ```bash
 python scripts/generate_camera_path.py --output /tmp/sierpinskicam_camera_path.json
 python scripts/create_sierpinskicam_conditioning.py --help
+python scripts/cache_sierpinskicam_text.py --help
 python scripts/run_sierpinskicam_inference.py --help
-python -m compileall scripts src
+python -m compileall -q scripts src
 ```
 
-Full video inference requires downloaded checkpoints, a valid conditioning folder, and a GPU environment.
+Full validation requires a GPU, downloaded checkpoints, and a conditioning folder with `rgb/`, `dense_tx/`, and `img/` entries.
 
 ## Release scope
 
 Included:
 
-- SierpinskiCam camera path generation
-- SierpinskiCam conditioning/data generation entrypoint
-- SierpinskiCam checkpoint-based inference entrypoint
-- Musubi/Wan package code required by inference
-- Public docs and checkpoint download placeholders
+- camera path generation
+- SierpinskiCam conditioning/data generation
+- checkpoint-based inference
+- Musubi/Wan code required by the inference path
+- public docs, examples, checkpoint placeholders, and release hygiene files
 
 Excluded:
 
-- model weight files
-- generated outputs/videos/latents/metrics
-- training run artifacts
+- checkpoint weights
+- generated videos, latents, metrics, and logs
+- training runs and training artifacts
 - paper metric reproduction scripts
-- baseline experiment wrappers
-- SLURM scripts and cluster-specific launchers
-- internal Codex/OMX coordination folders, logs, PDFs, rebuttals, and private paths
+- baseline wrappers and cluster-specific SLURM launchers
+- private paper drafts, rebuttals, Codex/OMX folders, and private absolute paths
 
 ## License and attribution
 
-See `THIRD_PARTY.md` and the upstream reference docs in `docs/`. This release includes code derived from Musubi Tuner and Wan-related components; respect all upstream licenses and model licenses when downloading checkpoints.
+See `LICENSE`, `THIRD_PARTY.md`, and `docs/musubi_tuner_README.md`. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.

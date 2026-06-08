@@ -50,3 +50,6 @@ texture_cache/
 
 # Private papers/rebuttals
 *.pdf
+
+# Internal validation artifacts (not part of public release)
+.release_validation/

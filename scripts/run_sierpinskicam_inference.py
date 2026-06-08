@@ -116,6 +116,7 @@ def main():
     from musubi_tuner.hv_train_network import (
         clean_memory_on_device,
         prepare_accelerator,
+        load_prompts,
         read_config_from_file,
         save_videos_grid,
         setup_parser_common,
@@ -184,7 +185,15 @@ def main():
         transformer.enable_block_swap(blocks_to_swap, accelerator.device, supports_backward=True)
         transformer.move_to_device_except_swap_blocks(accelerator.device)
 
-    sample_parameters = trainer.process_sample_prompts(trainer_args, accelerator, trainer_args.sample_prompts)
+    all_selected_caches_exist = bool(args.te_cache) and all(
+        os.path.exists(os.path.join(args.te_cache, f"{os.path.splitext(os.path.basename(video_file))[0]}_wan_te.safetensors"))
+        for video_file in selected_video_files
+    )
+    if all_selected_caches_exist:
+        print("Using precomputed text-encoder caches for all selected videos; skipping live T5 prompt encoding.")
+        sample_parameters = load_prompts(trainer_args.sample_prompts)
+    else:
+        sample_parameters = trainer.process_sample_prompts(trainer_args, accelerator, trainer_args.sample_prompts)
     sample_parameter = sample_parameters[0]
 
     default_t5_embeds = sample_parameter.get("t5_embeds", None)
