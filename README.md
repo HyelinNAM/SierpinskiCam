@@ -240,7 +240,7 @@ Useful inference options:
 
 ## License and attribution
 
-This code is released under the Apache-2.0 license. See `LICENSE` and `THIRD_PARTY.md` for details. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
+This code is released under the Apache-2.0 license. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
 
 ## Citation
 
