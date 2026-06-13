@@ -73,9 +73,16 @@ If you only run inference from already generated `data/conditioning/...` folders
 
 ## Checkpoints
 
-Weights are **not** committed to this repository. Download the public base checkpoints from Hugging Face, then add the SierpinskiCam LoRA released with this paper.
+Weights are **not** committed to this repository. Download the four files below before running inference.
 
-Expected local layout if you want to use `--checkpoint-root`:
+| File to save | Download source |
+| --- | --- |
+| `checkpoints/vae/wan_2.1_vae.safetensors` | [Wan VAE](https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/blob/main/split_files/vae/wan_2.1_vae.safetensors) |
+| `checkpoints/text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors` | [UMT5 text encoder](https://huggingface.co/Kijai/WanVideo_comfy/blob/main/umt5-xxl-enc-fp8_e4m3fn.safetensors) |
+| `checkpoints/diffusion_models/Wan2.1-Fun-Control-14B_fp8_e4m3fn.safetensors` | [Wan2.1 Fun-Control 14B fp8 DiT](https://huggingface.co/Kijai/WanVideo_comfy/blob/main/Wan2.1-Fun-Control-14B_fp8_e4m3fn.safetensors) |
+| `checkpoints/lora/sierpinskicam.safetensors` | [SierpinskiCam LoRA](https://drive.google.com/file/d/1D2LZoyAWSZR1Z_1_tahqjIgrBJIi4nb5/view?usp=drive_link) |
+
+Expected local layout:
 
 ```text
 checkpoints/
@@ -92,20 +99,6 @@ export SIERPINSKICAM_CHECKPOINT_DIR=$PWD/checkpoints
 ```
 
 You can also pass all paths explicitly with `--vae`, `--t5`, `--dit`, and `--network-weights`.
-
-Public base checkpoint sources used by this release:
-
-- Wan VAE: <https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/blob/main/split_files/vae/wan_2.1_vae.safetensors>
-- UMT5 text encoder: <https://huggingface.co/Kijai/WanVideo_comfy/blob/main/umt5-xxl-enc-fp8_e4m3fn.safetensors>
-- Wan2.1 Fun-Control 14B fp8 DiT: <https://huggingface.co/Kijai/WanVideo_comfy/blob/main/Wan2.1-Fun-Control-14B_fp8_e4m3fn.safetensors>
-
-Download the SierpinskiCam LoRA from Google Drive and save it as:
-
-```text
-checkpoints/lora/sierpinskicam.safetensors
-```
-
-LoRA download: [sierpinskicam.safetensors](https://drive.google.com/file/d/1D2LZoyAWSZR1Z_1_tahqjIgrBJIi4nb5/view?usp=drive_link)
 
 Expected LoRA checksum:
 
