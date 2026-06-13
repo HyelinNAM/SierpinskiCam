@@ -238,9 +238,13 @@ Useful inference options:
 - `--no-decode`: save latents only
 - `--check-only`: validate paths and exit before CUDA/model imports
 
-## License and attribution
+## License
 
 This code is released under the Apache-2.0 license. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
+
+## Acknowledgements
+
+We thank the authors and maintainers of [Musubi Tuner](https://github.com/kohya-ss/musubi-tuner) and [TrajectoryCrafter](https://github.com/TrajectoryCrafter/TrajectoryCrafter), which were helpful references while building this codebase.
 
 ## Citation
 
