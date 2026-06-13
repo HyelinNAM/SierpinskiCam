@@ -127,6 +127,11 @@
       color: #fff;
     }
 
+    .text-icon {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
     /* ── Section layout ───────────────────────── */
     .content-section {
       padding: 4rem 1.5rem;
