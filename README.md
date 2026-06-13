@@ -251,13 +251,4 @@ This code is released under the Apache-2.0 license. See `LICENSE` and `THIRD_PAR
 
 ## Citation
 
-If you find this work useful, please consider citing SierpinskiCam.
-
-```bibtex
-@article{sierpinskicam2026,
-  title   = {SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues},
-  author  = {Wizadwongsa, Suttisak and Nam, Hyelin and Suwajanakorn, Supasorn and Park, Jeong Joon},
-  journal = {arXiv preprint},
-  year    = {2026}
-}
-```
+If you find this work useful, please consider citing SierpinskiCam. BibTeX coming soon.
