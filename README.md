@@ -3,6 +3,7 @@
 Official inference code release for the SierpinskiCam.
 
 **[SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues](htpps://arxiv.org/abs)**
+
 [Suttisak Wizadwongsa*](), [Hyelin Nam*](https://hyelinnam.github.io/), [Supasorn Suwajanakorn](https://www.supasorn.com/), [Jeong Joon Park](https://jjparkcv.github.io/)
 
 
