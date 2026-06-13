@@ -167,16 +167,16 @@ Default paths used by the command above:
 - conditioning output: `data/conditioning`
 - camera name: `cam01`
 
-### 4. Optional: cache prompt/text embeddings
+### 4. Cache prompt/text embeddings
 
-Inference can encode the prompt on the fly. For repeated runs, precompute a scene cache first:
+Precompute the prompt cache before the smoke inference below:
 
 ```bash
 python scripts/cache_text.py \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR"
 ```
 
-By default this uses `examples/prompts/example_prompt.txt`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
+By default this uses `examples/prompts/example_prompt.txt`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). The inference commands below pass this folder with `--te-cache data/text_cache` so live T5 prompt encoding is skipped. If you skip this step, omit `--te-cache data/text_cache` from inference commands.
 
 ### 5. Validate inference paths without loading models
 
@@ -217,7 +217,7 @@ If you only want to check latent generation first, add `--no-decode`.
 python scripts/create_sierpinskicam_conditioning.py \
   --trajectorycrafter-path "$TRAJECTORYCRAFTER_PATH"
 
-# Optionally precompute text caches for repeated inference runs.
+# Precompute text caches for the default smoke inference.
 python scripts/cache_text.py \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR"
 
