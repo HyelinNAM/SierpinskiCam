@@ -257,4 +257,17 @@ Useful inference options:
 
 ## License and attribution
 
-See `LICENSE` and `THIRD_PARTY.md`. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
+This code is released under the Apache-2.0 license. See `LICENSE` and `THIRD_PARTY.md` for details. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
+
+## Citation
+
+If you find this work useful, please consider citing SierpinskiCam.
+
+```bibtex
+@article{sierpinskicam2026,
+  title   = {SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues},
+  author  = {Wizadwongsa, Suttisak and Nam, Hyelin and Suwajanakorn, Supasorn and Park, Jeong Joon},
+  journal = {arXiv preprint},
+  year    = {2026}
+}
+```
