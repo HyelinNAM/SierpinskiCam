@@ -139,11 +139,11 @@ The release includes five small source videos under the default sample-data inpu
 
 ```text
 example_test_data/input_videos/
-  cat_sushi.mp4
-  girl_with_hat.mp4
   01.mp4
-  09.mp4
-  10.mp4
+  02.mp4
+  03.mp4
+  04.mp4
+  05.mp4
 ```
 
 The conditioning script reads videos directly and uses the first `--frame-count` frames (`49` by default). It also still accepts legacy per-scene frame folders under `--input-base` if you want to run custom data. Use `--pad-short-scenes` only if you intentionally want to repeat the final frame for short clips.
@@ -160,16 +160,16 @@ python scripts/create_sierpinskicam_conditioning.py \
 Expected files:
 
 ```text
-data/conditioning/cam01/rgb/cat_sushi.mp4
-data/conditioning/cam01/dense_tx/cat_sushi.mp4
-data/conditioning/cam01/img/cat_sushi.jpg
+data/conditioning/cam01/rgb/01.mp4
+data/conditioning/cam01/dense_tx/01.mp4
+data/conditioning/cam01/img/01.jpg
 ```
 
 Default paths used by the command above:
 
 - input videos: `example_test_data/input_videos`
 - Sierpinski texture: `example_test_data/textures/sierpinski_dome_16x16_2048.png`
-- scene names: `cat_sushi`, `girl_with_hat`, `01`, `09`, `10`
+- scene names: `01`, `02`, `03`, `04`, `05`
 - camera file: `example_test_data/cameras/camera_extrinsics.json`
 - conditioning output: `data/conditioning`
 - camera name: `cam01`
@@ -186,14 +186,14 @@ python scripts/cache_text.py \
 This writes:
 
 ```text
-data/text_cache/cat_sushi_wan_te.safetensors
-data/text_cache/girl_with_hat_wan_te.safetensors
 data/text_cache/01_wan_te.safetensors
-data/text_cache/09_wan_te.safetensors
-data/text_cache/10_wan_te.safetensors
+data/text_cache/02_wan_te.safetensors
+data/text_cache/03_wan_te.safetensors
+data/text_cache/04_wan_te.safetensors
+data/text_cache/05_wan_te.safetensors
 ```
 
-By default this uses `examples/prompts/example_prompt.txt`, writes to `data/text_cache`, and caches the five provided sample-video scene names. Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
+By default this uses `examples/prompts/example_prompt.txt`, writes to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
 
 ### 5. Validate inference paths without loading models
 
@@ -220,7 +220,7 @@ python scripts/run_sierpinskicam_inference.py \
 Expected output:
 
 ```text
-outputs/smoke_cam01/cat_sushi.mp4
+outputs/smoke_cam01/01.mp4
 ```
 
 If you only want to check latent generation first, add `--no-decode`.

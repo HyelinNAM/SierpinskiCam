@@ -13,7 +13,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROMPT_FILE = REPO_ROOT / "examples" / "prompts" / "example_prompt.txt"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "text_cache"
-DEFAULT_SCENES = "cat_sushi,girl_with_hat,01,09,10"
+DEFAULT_SCENES = "01,02,03,04,05"
 
 
 def parse_args():

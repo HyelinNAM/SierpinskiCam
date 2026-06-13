@@ -15,7 +15,7 @@ DEFAULT_CAMERA_PATH = REPO_ROOT / "example_test_data" / "cameras" / "camera_extr
 DEFAULT_INPUT_BASE = REPO_ROOT / "example_test_data" / "input_videos"
 DEFAULT_OUTPUT_BASE = REPO_ROOT / "data" / "conditioning"
 DEFAULT_TEXTURE_PATH = REPO_ROOT / "example_test_data" / "textures" / "sierpinski_dome_16x16_2048.png"
-DEFAULT_SCENES = "cat_sushi,girl_with_hat,01,09,10"
+DEFAULT_SCENES = "01,02,03,04,05"
 VIDEO_EXTENSIONS = (".mp4", ".mov", ".avi", ".mkv", ".webm")
 
 class ChessPatternSphereRenderer:

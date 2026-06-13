@@ -7,7 +7,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_BASE_PATH = os.path.join(REPO_ROOT, "data", "conditioning", "cam01")
 DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "outputs", "smoke_cam01")
 DEFAULT_PROMPT_FILE = os.path.join(REPO_ROOT, "examples", "prompts", "example_prompt.txt")
-DEFAULT_ONLY_VIDEO = "cat_sushi"
+DEFAULT_ONLY_VIDEO = "01"
 
 
 def existing_path(path: str, kind: str) -> str:
@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument("--offset-pe", type=int, default=0)
     parser.add_argument("--lora-multiplier", type=float, default=0.95)
     parser.add_argument("--max-videos", type=int, default=1)
-    parser.add_argument("--only-video", default=DEFAULT_ONLY_VIDEO, help="Scene/video name to run. Defaults to cat_sushi for the example_test_data workflow; use --only-video all to process videos up to --max-videos.")
+    parser.add_argument("--only-video", default=DEFAULT_ONLY_VIDEO, help="Scene/video name to run. Defaults to 01 for the example_test_data workflow; use --only-video all to process videos up to --max-videos.")
     parser.add_argument("--sample-steps", type=int, default=30)
     parser.add_argument("--width", type=int, default=832)
     parser.add_argument("--height", type=int, default=480)
