@@ -99,10 +99,18 @@ Public base checkpoint sources used by this release:
 - UMT5 text encoder: <https://huggingface.co/Kijai/WanVideo_comfy/blob/main/umt5-xxl-enc-fp8_e4m3fn.safetensors>
 - Wan2.1 Fun-Control 14B fp8 DiT: <https://huggingface.co/Kijai/WanVideo_comfy/blob/main/Wan2.1-Fun-Control-14B_fp8_e4m3fn.safetensors>
 
-Release/upload our trained LoRA as:
+Download the SierpinskiCam LoRA from Google Drive and save it as:
 
 ```text
 checkpoints/lora/sierpinskicam.safetensors
+```
+
+LoRA download folder: <https://drive.google.com/drive/folders/13yQ3JpLTL74W2ztttrccFG67te_v_x-k?usp=drive_link>
+
+Expected LoRA checksum:
+
+```text
+md5: 05b3cf328a79b3e6b9c34fd387a599d2
 ```
 
 
