@@ -19,7 +19,7 @@ The public workflow is:
 
 1. **Use the provided camera trajectory JSON** (`example_test_data/cameras/camera_extrinsics.json`).
 2. **Generate SierpinskiCam conditioning/data** (`rgb`, `dense_tx`, and first-frame `img`) from the provided sample videos.
-3. **Optionally cache prompt/text embeddings** for the target scenes.
+3. **Cache prompt/text embeddings** for the target scenes.
 4. **Run checkpoint-based inference** to produce an output video for at least one example scene.
 
 ## Repository layout
@@ -32,13 +32,13 @@ SierpinskiCam/
   example_test_data/
     cameras/camera_extrinsics.json        # ReCamMaster-style test camera paths
     input_videos/                         # five small sample videos for smoke tests
+    prompts/sample_prompts.json           # per-sample prompts for scenes 01-05
     textures/sierpinski_dome_16x16_2048.png # Sierpinski dome texture asset
   scripts/
     generate_camera_path.py               # optional custom camera-path generator
     create_sierpinskicam_conditioning.py   # conditioning/data generator
-    cache_text.py                         # optional prompt/text-encoder cache helper
+    cache_text.py                         # prompt/text-encoder cache helper
     run_sierpinskicam_inference.py         # one-video or batch inference
-  examples/prompts/example_prompt.txt      # minimal prompt file
   checkpoints/                              # local checkpoint workspace; weights are git-ignored
   docs/                                    # static SierpinskiCam project page
   data/                                    # local generated conditioning/text-cache workspace (git-ignored)
@@ -176,7 +176,7 @@ python scripts/cache_text.py \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR"
 ```
 
-By default this uses `examples/prompts/example_prompt.txt`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). The inference commands below use this folder with `--te-cache data/text_cache`.
+By default this uses `example_test_data/prompts/sample_prompts.json`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches one prompt per provided sample-video scene (`01`-`05`). The inference commands below use this folder with `--te-cache data/text_cache`.
 
 ### 5. Validate inference paths without loading models
 

@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PROMPT_FILE = REPO_ROOT / "examples" / "prompts" / "example_prompt.txt"
+DEFAULT_PROMPT_FILE = REPO_ROOT / "example_test_data" / "prompts" / "sample_prompts.json"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "text_cache"
 DEFAULT_SCENES = "01,02,03,04,05"
 
@@ -24,8 +24,8 @@ def parse_args():
     parser.add_argument("--scenes", default=DEFAULT_SCENES, help="Comma-separated scene/video names to cache.")
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--prompt", help="Prompt text to cache.")
-    group.add_argument("--prompt-file", default=str(DEFAULT_PROMPT_FILE), help="Prompt file; the first non-comment prompt is used by default.")
-    parser.add_argument("--prompt-index", type=int, default=0, help="Prompt index from --prompt-file to cache.")
+    group.add_argument("--prompt-file", default=str(DEFAULT_PROMPT_FILE), help="Prompt file. If it contains one prompt per scene, prompts are matched to --scenes by order or by an optional scene field.")
+    parser.add_argument("--prompt-index", type=int, default=None, help="Prompt index from --prompt-file to reuse for all scenes. By default, one prompt per scene is used when available.")
     parser.add_argument("--device", default=None, help="Torch device. Defaults to cuda when available, else cpu.")
     parser.add_argument("--fp8-t5", action="store_true", help="Load the T5 model in fp8 mode.")
     parser.add_argument("--check-only", action="store_true", help="Validate paths and arguments without importing torch/model code.")
@@ -61,12 +61,27 @@ def main():
     from musubi_tuner.wan.modules.t5 import T5EncoderModel
 
     if args.prompt is not None:
-        prompt = args.prompt
+        scene_prompts = {scene: args.prompt for scene in scenes}
     else:
         prompts = load_prompts(args.prompt_file)
-        if args.prompt_index < 0 or args.prompt_index >= len(prompts):
-            raise IndexError(f"--prompt-index {args.prompt_index} outside prompt file range 0..{len(prompts)-1}")
-        prompt = prompts[args.prompt_index].get("prompt", "")
+        if args.prompt_index is not None:
+            if args.prompt_index < 0 or args.prompt_index >= len(prompts):
+                raise IndexError(f"--prompt-index {args.prompt_index} outside prompt file range 0..{len(prompts)-1}")
+            prompt = prompts[args.prompt_index].get("prompt", "")
+            scene_prompts = {scene: prompt for scene in scenes}
+        else:
+            by_scene = {str(item.get("scene")): item.get("prompt", "") for item in prompts if item.get("scene") is not None}
+            if all(scene in by_scene for scene in scenes):
+                scene_prompts = {scene: by_scene[scene] for scene in scenes}
+            elif len(prompts) == 1:
+                scene_prompts = {scene: prompts[0].get("prompt", "") for scene in scenes}
+            elif len(prompts) >= len(scenes):
+                scene_prompts = {scene: prompts[index].get("prompt", "") for index, scene in enumerate(scenes)}
+            else:
+                raise ValueError(
+                    f"Prompt file has {len(prompts)} prompts for {len(scenes)} scenes. "
+                    "Provide one prompt, one prompt per scene, scene fields matching --scenes, or --prompt-index."
+                )
 
     config = wan_t2v_14B.t2v_14B
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
@@ -75,13 +90,14 @@ def main():
 
     print(f"Loading T5 on {device}: {args.t5}")
     text_encoder = T5EncoderModel(text_len=config.text_len, dtype=config.t5_dtype, device=device, weight_path=args.t5, fp8=args.fp8_t5)
+    encoded_prompts = {}
     with torch.no_grad():
-        ctx = text_encoder([prompt], device)[0].detach().to("cpu")
-
-    for scene in scenes:
-        out = output_dir / f"{scene}_wan_te.safetensors"
-        save_file({"varlen_t5_bfloat16": ctx}, str(out))
-        print(f"Wrote {out}")
+        for scene, prompt in scene_prompts.items():
+            if prompt not in encoded_prompts:
+                encoded_prompts[prompt] = text_encoder([prompt], device)[0].detach().to("cpu")
+            out = output_dir / f"{scene}_wan_te.safetensors"
+            save_file({"varlen_t5_bfloat16": encoded_prompts[prompt]}, str(out))
+            print(f"Wrote {out}")
 
 
 if __name__ == "__main__":

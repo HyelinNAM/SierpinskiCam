@@ -6,7 +6,7 @@ import sys
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_BASE_PATH = os.path.join(REPO_ROOT, "data", "conditioning", "cam01")
 DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "outputs", "smoke_cam01")
-DEFAULT_PROMPT_FILE = os.path.join(REPO_ROOT, "examples", "prompts", "example_prompt.txt")
+DEFAULT_PROMPT_FILE = os.path.join(REPO_ROOT, "example_test_data", "prompts", "sample_prompts.json")
 DEFAULT_ONLY_VIDEO = "01"
 
 
@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory for generated latents/videos.")
     parser.add_argument("--guidance", default="dense_tx", help="Conditioning folder under --base-path.")
     parser.add_argument("--reference", default="rgb", help="Reference-video folder under --base-path.")
-    parser.add_argument("--te-cache", default=None, help="Optional text-encoder cache folder containing <video>_wan_te.safetensors files.")
+    parser.add_argument("--te-cache", default=None, help="Precomputed text-encoder cache folder containing <video>_wan_te.safetensors files.")
     parser.add_argument(
         "--prompt-file",
         default=DEFAULT_PROMPT_FILE,
