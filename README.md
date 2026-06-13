@@ -183,17 +183,7 @@ python scripts/cache_text.py \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR"
 ```
 
-This writes:
-
-```text
-data/text_cache/01_wan_te.safetensors
-data/text_cache/02_wan_te.safetensors
-data/text_cache/03_wan_te.safetensors
-data/text_cache/04_wan_te.safetensors
-data/text_cache/05_wan_te.safetensors
-```
-
-By default this uses `examples/prompts/example_prompt.txt`, writes to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
+By default this uses `examples/prompts/example_prompt.txt`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
 
 ### 5. Validate inference paths without loading models
 
