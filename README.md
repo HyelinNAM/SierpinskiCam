@@ -2,7 +2,7 @@
 
 Official inference code release for the SierpinskiCam.
 
-**[SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues](htpps://arxiv.org/abs)**
+**[SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues](https://arxiv.org/abs)**
 
 [Suttisak Wizadwongsa*](), [Hyelin Nam*](https://hyelinnam.github.io/), [Supasorn Suwajanakorn](https://www.supasorn.com/), [Jeong Joon Park](https://jjparkcv.github.io/)
 
@@ -52,7 +52,7 @@ The `docs/` folder is the deployable static project page. Runtime instructions l
 Python `>=3.10,<3.13` is required. The default install path uses CUDA 12.4 PyTorch wheels.
 
 ```bash
-git clone <PUBLIC_REPO_URL> SierpinskiCam
+git clone https://github.com/HyelinNAM/SierpinskiCam.git SierpinskiCam
 cd SierpinskiCam
 
 conda create -n sierpinskicam python=3.11 -y
@@ -63,7 +63,7 @@ pip install -r requirements.txt
 
 `requirements.txt` installs this repository, the Wan/Musubi inference dependencies, Depth-Anything-3, and the small conditioning helpers. If your machine uses a different CUDA version, edit the two PyTorch lines at the top of `requirements.txt` before installing.
 
-To regenerate conditioning from the sample videos, also point the script to the TrajectoryCrafter code directory that contains `utils.Warper` (in the original TrajectoryCrafter checkout, this is usually the `models/` directory):
+To regenerate conditioning from the sample videos, also point the script to the TrajectoryCrafter code directory that contains `utils.Warper`. In the original TrajectoryCrafter checkout, this is usually the `models/` directory, so the path should contain `utils.py` or a `utils/` module with `Warper`:
 
 ```bash
 export TRAJECTORYCRAFTER_PATH=/path/to/TrajectoryCrafter/models
@@ -179,6 +179,8 @@ python scripts/cache_text.py \
 By default this uses `examples/prompts/example_prompt.txt`, writes `<scene>_wan_te.safetensors` files to `data/text_cache`, and caches the five provided sample-video scene names (`01`-`05`). Pass the folder to inference with `--te-cache data/text_cache`. If every selected scene has a cache file, the inference script skips live T5 prompt encoding.
 
 ### 5. Validate inference paths without loading models
+
+Run this after generating conditioning in Step 3; `--check-only` still expects populated `data/conditioning/<camera>/rgb`, `dense_tx`, and `img` entries.
 
 ```bash
 python scripts/run_sierpinskicam_inference.py \
