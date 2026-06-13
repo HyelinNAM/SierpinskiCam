@@ -1,0 +1,32 @@
+{
+  "file": "camera_extrinsics_recammaster_plus_advanced.json",
+  "frame_count": 81,
+  "camera_count": 14,
+  "format": "ReCamMaster camera_extrinsics/camera_path JSON: frame{index} -> camXX -> four row-major pose rows as a string",
+  "cam01_to_cam10": {
+    "source": "KlingAIResearch/ReCamMaster example_test_data/cameras/camera_extrinsics.json",
+    "unchanged_from_source": true
+  },
+  "cam11_to_cam14": [
+    {
+      "camera": "cam11",
+      "paper_path": "Quarter Orbit",
+      "source_camera": "final_camera_trajectory_samples_270/cam01"
+    },
+    {
+      "camera": "cam12",
+      "paper_path": "Diagonal Top-Side Peek",
+      "source_camera": "final_camera_trajectory_samples_270/cam03"
+    },
+    {
+      "camera": "cam13",
+      "paper_path": "Upward Crane",
+      "source_camera": "final_camera_trajectory_samples_270/cam06"
+    },
+    {
+      "camera": "cam14",
+      "paper_path": "Backward Pullback",
+      "source_camera": "final_camera_trajectory_samples_270/cam09"
+    }
+  ]
+}

@@ -10,15 +10,21 @@ import os
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_PROMPT_FILE = REPO_ROOT / "examples" / "prompts" / "example_prompt.txt"
+DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "text_cache"
+DEFAULT_SCENES = "cat_sushi,girl_with_hat,01,09,10"
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Cache SierpinskiCam/Wan T5 prompt embeddings for one or more scenes.")
-    parser.add_argument("--t5", required=True, help="UMT5/T5 checkpoint path.")
-    parser.add_argument("--output-dir", required=True, help="Directory where <scene>_wan_te.safetensors files are written.")
-    parser.add_argument("--scenes", required=True, help="Comma-separated scene/video names, e.g. bear,camel.")
-    group = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument("--checkpoint-root", default=os.environ.get("SIERPINSKICAM_CHECKPOINT_DIR"), help="Optional root containing text_encoders/umt5-xxl-enc-fp8_e4m3fn.safetensors.")
+    parser.add_argument("--t5", default=None, help="UMT5/T5 checkpoint path. Overrides --checkpoint-root derived path.")
+    parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Directory where <scene>_wan_te.safetensors files are written.")
+    parser.add_argument("--scenes", default=DEFAULT_SCENES, help="Comma-separated scene/video names to cache.")
+    group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--prompt", help="Prompt text to cache.")
-    group.add_argument("--prompt-file", help="Prompt file; the first non-comment prompt is used by default.")
+    group.add_argument("--prompt-file", default=str(DEFAULT_PROMPT_FILE), help="Prompt file; the first non-comment prompt is used by default.")
     parser.add_argument("--prompt-index", type=int, default=0, help="Prompt index from --prompt-file to cache.")
     parser.add_argument("--device", default=None, help="Torch device. Defaults to cuda when available, else cpu.")
     parser.add_argument("--fp8-t5", action="store_true", help="Load the T5 model in fp8 mode.")
@@ -28,6 +34,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if args.t5 is None and args.checkpoint_root:
+        args.t5 = os.path.join(args.checkpoint_root, "text_encoders", "umt5-xxl-enc-fp8_e4m3fn.safetensors")
+    if args.t5 is None:
+        raise ValueError("Provide --t5 explicitly or set --checkpoint-root / SIERPINSKICAM_CHECKPOINT_DIR.")
     if not os.path.exists(args.t5):
         raise FileNotFoundError(f"--t5 does not exist: {args.t5}")
     scenes = [scene.strip() for scene in args.scenes.split(",") if scene.strip()]

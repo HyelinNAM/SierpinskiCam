@@ -24,7 +24,6 @@ outputs/**
 !outputs/.gitkeep
 data/**
 !data/.gitkeep
-!data/README.md
 
 # Media/results/logs
 *.mp4
@@ -38,6 +37,7 @@ data/**
 *.jsonl
 *.log
 slurm-*.out
+!example_test_data/input_videos/*.mp4
 
 # Internal/private folders that must not enter public releases
 .omx/
@@ -50,6 +50,7 @@ texture_cache/
 
 # Private papers/rebuttals
 *.pdf
+!docs/assets/papers/*.pdf
 
 # Internal validation artifacts (not part of public release)
 .release_validation/

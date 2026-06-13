@@ -1,0 +1,14 @@
+# Default public install path: CUDA 12.4 PyTorch wheels.
+# If your system needs a different CUDA build, replace these two torch lines
+# with the matching command from https://pytorch.org/get-started/locally/.
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.5.1+cu124
+torchvision==0.20.1+cu124
+
+# Install this repository plus the SierpinskiCam helper extras
+# declared in pyproject.toml (moviepy, fastprogress).
+-e .[sierpinskicam]
+
+# Conditioning regeneration dependency. Inference from existing conditioning
+# does not import Depth-Anything-3.
+depth-anything-3 @ git+https://github.com/ByteDance-Seed/Depth-Anything-3.git

@@ -3,6 +3,12 @@ import glob
 import os
 import sys
 
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DEFAULT_BASE_PATH = os.path.join(REPO_ROOT, "data", "conditioning", "cam01")
+DEFAULT_OUTPUT_DIR = os.path.join(REPO_ROOT, "outputs", "smoke_cam01")
+DEFAULT_PROMPT_FILE = os.path.join(REPO_ROOT, "examples", "prompts", "example_prompt.txt")
+DEFAULT_ONLY_VIDEO = "cat_sushi"
+
 
 def existing_path(path: str, kind: str) -> str:
     if not os.path.exists(path):
@@ -16,16 +22,16 @@ def parse_args():
     )
     parser.add_argument(
         "--base-path",
-        required=True,
+        default=DEFAULT_BASE_PATH,
         help="Conditioning directory for one camera, containing rgb/, img/, and the selected guidance folder (usually dense_tx/).",
     )
-    parser.add_argument("--output-dir", required=True, help="Directory for generated latents/videos.")
+    parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR, help="Directory for generated latents/videos.")
     parser.add_argument("--guidance", default="dense_tx", help="Conditioning folder under --base-path.")
     parser.add_argument("--reference", default="rgb", help="Reference-video folder under --base-path.")
     parser.add_argument("--te-cache", default=None, help="Optional text-encoder cache folder containing <video>_wan_te.safetensors files.")
     parser.add_argument(
         "--prompt-file",
-        default=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "examples", "prompts", "example_prompt.txt")),
+        default=DEFAULT_PROMPT_FILE,
         help="Prompt file consumed by Musubi/Wan sampling utilities.",
     )
     parser.add_argument("--checkpoint-root", default=os.environ.get("SIERPINSKICAM_CHECKPOINT_DIR"), help="Optional root containing vae/, text_encoders/, diffusion_models/, and lora/ checkpoints.")
@@ -38,7 +44,7 @@ def parse_args():
     parser.add_argument("--offset-pe", type=int, default=0)
     parser.add_argument("--lora-multiplier", type=float, default=0.95)
     parser.add_argument("--max-videos", type=int, default=1)
-    parser.add_argument("--only-video", default=None)
+    parser.add_argument("--only-video", default=DEFAULT_ONLY_VIDEO, help="Scene/video name to run. Defaults to cat_sushi for the example_test_data workflow; use --only-video all to process videos up to --max-videos.")
     parser.add_argument("--sample-steps", type=int, default=30)
     parser.add_argument("--width", type=int, default=832)
     parser.add_argument("--height", type=int, default=480)
@@ -54,7 +60,7 @@ def fill_checkpoint_paths(args):
     if args.checkpoint_root:
         derived = {
             "vae": os.path.join(args.checkpoint_root, "vae", "wan_2.1_vae.safetensors"),
-            "t5": os.path.join(args.checkpoint_root, "text_encoders", "umt5-xxl-enc-fp8_e4m3fn-kijai.safetensors"),
+            "t5": os.path.join(args.checkpoint_root, "text_encoders", "umt5-xxl-enc-fp8_e4m3fn.safetensors"),
             "dit": os.path.join(args.checkpoint_root, "diffusion_models", "Wan2.1-Fun-Control-14B_fp8_e4m3fn.safetensors"),
             "network_weights": os.path.join(args.checkpoint_root, "lora", "sierpinskicam.safetensors"),
         }
@@ -85,7 +91,7 @@ def check_inputs(args):
     existing_path(args.network_weights, "SierpinskiCam LoRA/network checkpoint")
 
     video_files = sorted(glob.glob(os.path.join(args.base_path, args.reference, "*.mp4")))
-    if args.only_video:
+    if args.only_video and args.only_video.lower() not in {"all", "none"}:
         stem = os.path.splitext(os.path.basename(args.only_video))[0]
         video_files = [v for v in video_files if os.path.splitext(os.path.basename(v))[0] == stem]
     if not video_files:
