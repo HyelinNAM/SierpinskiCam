@@ -105,7 +105,7 @@ Download the SierpinskiCam LoRA from Google Drive and save it as:
 checkpoints/lora/sierpinskicam.safetensors
 ```
 
-LoRA download folder: <https://drive.google.com/drive/folders/13yQ3JpLTL74W2ztttrccFG67te_v_x-k?usp=drive_link>
+LoRA download: [sierpinskicam.safetensors](https://drive.google.com/file/d/1D2LZoyAWSZR1Z_1_tahqjIgrBJIi4nb5/view?usp=drive_link)
 
 Expected LoRA checksum:
 
