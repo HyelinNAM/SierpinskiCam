@@ -205,10 +205,17 @@ python scripts/run_sierpinskicam_inference.py \
 Expected output:
 
 ```text
-outputs/smoke_cam01/01.mp4
+outputs/smoke_cam01/
+  01_sierpinskicam.mp4     # generated retaking video
+  latent/01.safetensors    # intermediate latent
+  inputs/
+    rgb/01.mp4            # selected reference/source video used for inference
+    dense_tx/01.mp4       # selected SierpinskiCam conditioning video
+    img/01.jpg            # selected first-frame image condition
 ```
 
-If you only want to check latent generation first, add `--no-decode`.
+The `inputs/` copies make each result folder easier to inspect or share without
+looking back into `data/conditioning`. If you only want to check latent generation first, add `--no-decode`.
 
 ## Useful script entry points
 
@@ -237,7 +244,9 @@ Useful inference options:
 - `--te-cache <dir>`: precomputed text-encoder cache containing `<scene>_wan_te.safetensors`
 - `--only-video <scene>`: run one named scene
 - `--max-videos N`: cap the number of processed scenes
+- `--output-suffix <name>`: suffix for generated videos; default `sierpinskicam` writes `01_sierpinskicam.mp4`
 - `--no-decode`: save latents only
+- `--no-save-inputs`: skip copying selected `rgb`, `dense_tx`, and `img` inputs into the output folder
 - `--check-only`: validate paths and exit before CUDA/model imports
 
 ## License

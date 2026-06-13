@@ -1,6 +1,7 @@
 import argparse
 import glob
 import os
+import shutil
 import sys
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -51,7 +52,15 @@ def parse_args():
     parser.add_argument("--frame-count", type=int, default=49)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--blocks-to-swap", type=int, default=18)
+    parser.add_argument("--output-suffix", default="sierpinskicam", help="Suffix for generated videos, e.g. 01_sierpinskicam.mp4. Use an empty string to keep 01.mp4.")
     parser.add_argument("--no-decode", action="store_true", help="Save latent only.")
+    parser.add_argument(
+        "--no-save-inputs",
+        dest="save_inputs",
+        action="store_false",
+        help="Do not copy the selected reference/guidance/image inputs into the output directory.",
+    )
+    parser.set_defaults(save_inputs=True)
     parser.add_argument("--check-only", action="store_true", help="Check paths and exit before CUDA/model imports.")
     return parser.parse_args()
 
@@ -106,6 +115,24 @@ def check_inputs(args):
     print(f"  output_dir: {args.output_dir}")
     print(f"  te_cache: {args.te_cache or '(disabled)'}")
     return selected
+
+
+def copy_selected_inputs(args, video_name: str, reference_video_path: str) -> None:
+    """Keep the user-facing result folder self-contained for inspection."""
+
+    input_root = os.path.join(args.output_dir, "inputs")
+    artifacts = {
+        os.path.join(args.reference, f"{video_name}.mp4"): reference_video_path,
+        os.path.join(args.guidance, f"{video_name}.mp4"): os.path.join(args.base_path, args.guidance, f"{video_name}.mp4"),
+        os.path.join("img", f"{video_name}.jpg"): os.path.join(args.base_path, "img", f"{video_name}.jpg"),
+    }
+
+    for relative_path, source_path in artifacts.items():
+        existing_path(source_path, f"input artifact {relative_path}")
+        destination_path = os.path.join(input_root, relative_path)
+        os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+        shutil.copy2(source_path, destination_path)
+
 
 def main():
     args = parse_args()
@@ -207,6 +234,8 @@ def main():
     for index, video_file in enumerate(selected_video_files):
         video_name = os.path.splitext(os.path.basename(video_file))[0]
         print(f"Processing {index + 1}/{len(selected_video_files)}: {video_name}")
+        if args.save_inputs:
+            copy_selected_inputs(args, video_name, video_file)
 
         cache_path = os.path.join(args.te_cache, f"{video_name}_wan_te.safetensors") if args.te_cache else None
         if cache_path and os.path.exists(cache_path):
@@ -265,7 +294,8 @@ def main():
             video = vae.decode(latent)[0]
         video = video.unsqueeze(0).to(torch.float32).cpu()
         video = (video / 2 + 0.5).clamp(0, 1)
-        save_videos_grid(video, os.path.join(args.output_dir, f"{video_name}.mp4"), fps=12)
+        output_stem = f"{video_name}_{args.output_suffix}" if args.output_suffix else video_name
+        save_videos_grid(video, os.path.join(args.output_dir, f"{output_stem}.mp4"), fps=12)
 
 
 if __name__ == "__main__":
