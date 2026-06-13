@@ -63,10 +63,10 @@ pip install -r requirements.txt
 
 `requirements.txt` installs this repository, the Wan/Musubi inference dependencies, Depth-Anything-3, and the small conditioning helpers. If your machine uses a different CUDA version, edit the two PyTorch lines at the top of `requirements.txt` before installing.
 
-To regenerate conditioning from the sample videos, also point the script to a local TrajectoryCrafter `models/` directory containing `utils.Warper`:
+To regenerate conditioning from the sample videos, also point the script to the TrajectoryCrafter code directory that contains `utils.Warper` (in the original TrajectoryCrafter checkout, this is usually the `models/` directory):
 
 ```bash
-export TRAJECTORYCRAFTER_MODELS=/path/to/TrajectoryCrafter/models
+export TRAJECTORYCRAFTER_PATH=/path/to/TrajectoryCrafter/models
 ```
 
 If you only run inference from already generated `data/conditioning/...` folders, TrajectoryCrafter and Depth-Anything-3 are not used at inference time.
@@ -154,7 +154,7 @@ The Sierpinski dome texture is self-contained in `example_test_data/textures/sie
 
 ```bash
 python scripts/create_sierpinskicam_conditioning.py \
-  --trajectorycrafter-models "$TRAJECTORYCRAFTER_MODELS"
+  --trajectorycrafter-path "$TRAJECTORYCRAFTER_PATH"
 ```
 
 Expected files:
@@ -230,7 +230,7 @@ If you only want to check latent generation first, add `--no-decode`.
 ```bash
 # Generate default cam01 conditioning for the five sample videos.
 python scripts/create_sierpinskicam_conditioning.py \
-  --trajectorycrafter-models "$TRAJECTORYCRAFTER_MODELS"
+  --trajectorycrafter-path "$TRAJECTORYCRAFTER_PATH"
 
 # Optionally precompute text caches for repeated inference runs.
 python scripts/cache_text.py \

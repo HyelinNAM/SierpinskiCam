@@ -518,7 +518,16 @@ if __name__ == "__main__":
     )
     parser.add_argument("--output-base", default=str(DEFAULT_OUTPUT_BASE), help="Output directory for camera-specific rgb/dense/mask/dome/dense_tx folders.")
     parser.add_argument("--camera-path", default=str(DEFAULT_CAMERA_PATH), help="ReCamMaster-format camera JSON. Defaults to example_test_data/cameras/camera_extrinsics.json.")
-    parser.add_argument("--trajectorycrafter-models", default=os.environ.get("TRAJECTORYCRAFTER_MODELS"), help="Path to TrajectoryCrafter/models containing utils.Warper. Can also be set with TRAJECTORYCRAFTER_MODELS.")
+    default_trajectorycrafter_path = os.environ.get("TRAJECTORYCRAFTER_PATH")
+    parser.add_argument(
+        "--trajectorycrafter-path",
+        default=default_trajectorycrafter_path,
+        help=(
+            "Path to the TrajectoryCrafter code directory that contains utils.Warper "
+            "(often the TrajectoryCrafter/models directory). Can also be set with "
+            "TRAJECTORYCRAFTER_PATH."
+        ),
+    )
     parser.add_argument("--da3-model-id", default="depth-anything/DA3NESTED-GIANT-LARGE", help="Depth-Anything-3 model id or local path.")
     parser.add_argument("--camera-names", default="cam01", help="Comma-separated camera names to render. Defaults to cam01 for a quick smoke run; use cam01,...,cam14 for all provided paths.")
     parser.add_argument(
@@ -587,10 +596,10 @@ if __name__ == "__main__":
         print(f"  outputs: {folder_names}")
         sys.exit(0)
 
-    if args.trajectorycrafter_models is None:
-        raise ValueError("Provide --trajectorycrafter-models or set TRAJECTORYCRAFTER_MODELS to the TrajectoryCrafter/models directory.")
-    if not os.path.isdir(args.trajectorycrafter_models):
-        raise FileNotFoundError(f"TrajectoryCrafter models path does not exist: {args.trajectorycrafter_models}")
+    if args.trajectorycrafter_path is None:
+        raise ValueError("Provide --trajectorycrafter-path or set TRAJECTORYCRAFTER_PATH to the TrajectoryCrafter code directory containing utils.Warper.")
+    if not os.path.isdir(args.trajectorycrafter_path):
+        raise FileNotFoundError(f"TrajectoryCrafter path does not exist: {args.trajectorycrafter_path}")
 
     global cv2, torch, F, np
     import cv2
@@ -598,7 +607,7 @@ if __name__ == "__main__":
     import torch
     import torch.nn.functional as F
 
-    sys.path.append(args.trajectorycrafter_models)
+    sys.path.append(args.trajectorycrafter_path)
     from utils import Warper
 
     try:
