@@ -255,49 +255,6 @@ Useful inference options:
 - `--no-decode`: save latents only
 - `--check-only`: validate paths and exit before CUDA/model imports
 
-## Validation checklist
-
-These checks should pass without downloading model weights:
-
-```bash
-python - <<'PY'
-import json
-from pathlib import Path
-p = Path("example_test_data/cameras/camera_extrinsics.json")
-data = json.loads(p.read_text())
-assert len(data) == 81
-assert list(data["frame0"].keys()) == [f"cam{i:02d}" for i in range(1, 15)]
-print("camera JSON OK")
-PY
-python scripts/create_sierpinskicam_conditioning.py --check-only
-python -m compileall -q scripts src
-```
-
-Full validation requires a GPU, downloaded checkpoints, and a conditioning folder with `rgb/`, `dense_tx/`, and `img/` entries.
-For repeated inference runs, generate text caches with `python scripts/cache_text.py --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR"`.
-
-## Release scope
-
-Included:
-
-- provided ReCamMaster-format camera paths under `example_test_data/cameras/` (`cam01`-`cam14`)
-- five small sample input videos under `example_test_data/input_videos/`
-- self-contained Sierpinski dome texture under `example_test_data/textures/`
-- optional custom camera path generation
-- SierpinskiCam conditioning/data generation
-- checkpoint-based inference
-- Musubi/Wan code required by the inference path
-- public docs, examples, checkpoint placeholders, and release hygiene files
-
-Excluded:
-
-- checkpoint weights
-- generated videos, latents, metrics, and logs
-- training runs and training artifacts
-- paper metric reproduction scripts
-- baseline wrappers and cluster-specific SLURM launchers
-- private paper drafts, rebuttals, Codex/OMX folders, and private absolute paths
-
 ## License and attribution
 
 See `LICENSE` and `THIRD_PARTY.md`. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
