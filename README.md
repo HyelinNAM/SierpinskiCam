@@ -198,8 +198,7 @@ python scripts/run_sierpinskicam_inference.py \
   --checkpoint-root "$SIERPINSKICAM_CHECKPOINT_DIR" \
   --te-cache data/text_cache \
   --max-videos 1 \
-  --sample-steps 30 \
-  --blocks-to-swap 18
+  --sample-steps 30
 ```
 
 Expected output:
