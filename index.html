@@ -94,12 +94,14 @@
      ABSTRACT
 ════════════════════════════════════════════ -->
 <div class="content-section">
-  <details class="abstract-toggle">
-    <summary>
-      <span class="section-title">Abstract</span>
-      <span class="abstract-toggle-label" aria-hidden="true">Show</span>
-    </summary>
-  <div class="abstract-text">
+  <div class="section-heading-row abstract-heading-row">
+    <h2 class="section-title">Abstract</h2>
+    <button class="abstract-toggle-button" type="button" aria-expanded="false" aria-controls="abstract-body">
+      <span class="abstract-toggle-label">Show</span>
+      <span class="abstract-toggle-icon" aria-hidden="true">+</span>
+    </button>
+  </div>
+  <div class="abstract-text" id="abstract-body" hidden>
     Generating novel renderings of a scene along user-defined camera trajectories from a single
     monocular video — dubbed <em>video retaking</em> — is a compelling but difficult problem in
     content creation and visual effects. Existing geometry-guided approaches reconstruct a 4D
@@ -118,7 +120,6 @@
     controllability, geometric consistency, and video quality across diverse and challenging
     retaking scenarios.
   </div>
-  </details>
 
 </div>
 
@@ -324,6 +325,21 @@
     <a href="https://nerfies.github.io/" target="_blank">Nerfies</a> project page.
   </p>
 </footer>
+
+<script>
+  const abstractToggle = document.querySelector('.abstract-toggle-button');
+  const abstractBody = document.getElementById('abstract-body');
+
+  if (abstractToggle && abstractBody) {
+    abstractToggle.addEventListener('click', () => {
+      const isOpen = abstractToggle.getAttribute('aria-expanded') === 'true';
+      abstractToggle.setAttribute('aria-expanded', String(!isOpen));
+      abstractBody.hidden = isOpen;
+      abstractToggle.querySelector('.abstract-toggle-label').textContent = isOpen ? 'Show' : 'Hide';
+      abstractToggle.querySelector('.abstract-toggle-icon').textContent = isOpen ? '+' : '−';
+    });
+  }
+</script>
 
 </body>
 </html>

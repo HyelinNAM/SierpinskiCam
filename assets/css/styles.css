@@ -177,48 +177,40 @@
     }
 
     /* ── Abstract ─────────────────────────────── */
-    .abstract-toggle {
-      background: transparent;
-    }
-
-    .abstract-toggle summary {
+    .section-heading-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      cursor: pointer;
-      list-style: none;
-      color: var(--primary);
-      user-select: none;
     }
 
-    .abstract-toggle summary::-webkit-details-marker {
-      display: none;
+    .abstract-heading-row {
+      margin-bottom: 1.2rem;
     }
 
-    .abstract-toggle summary .section-title {
+    .section-heading-row .section-title {
       margin-bottom: 0;
-      padding-bottom: 0;
     }
 
-    .abstract-toggle-label {
-      margin-left: auto;
+    .abstract-toggle-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--muted);
+      padding: 0;
     }
 
-    .abstract-toggle[open] .abstract-toggle-label {
-      font-size: 0;
+    .abstract-toggle-button:hover {
+      color: var(--primary);
     }
 
-    .abstract-toggle[open] .abstract-toggle-label::after {
-      content: "Hide";
-      font-size: 0.85rem;
-    }
-
-    .abstract-toggle summary::after {
-      content: "+";
+    .abstract-toggle-icon {
       width: 1.55rem;
       height: 1.55rem;
       border-radius: 999px;
@@ -229,15 +221,10 @@
       justify-content: center;
       color: var(--primary);
       font-weight: 700;
-      flex: 0 0 auto;
-    }
-
-    .abstract-toggle[open] summary::after {
-      content: "−";
+      line-height: 1;
     }
 
     .abstract-text {
-      margin-top: 1.2rem;
       font-size: 1rem;
       line-height: 1.8;
       color: var(--text);
