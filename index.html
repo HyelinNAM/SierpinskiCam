@@ -94,7 +94,11 @@
      ABSTRACT
 ════════════════════════════════════════════ -->
 <div class="content-section">
-  <h2 class="section-title">Abstract</h2>
+  <details class="abstract-toggle">
+    <summary>
+      <span class="section-title">Abstract</span>
+      <span class="abstract-toggle-label" aria-hidden="true">Show</span>
+    </summary>
   <div class="abstract-text">
     Generating novel renderings of a scene along user-defined camera trajectories from a single
     monocular video — dubbed <em>video retaking</em> — is a compelling but difficult problem in
@@ -114,6 +118,7 @@
     controllability, geometric consistency, and video quality across diverse and challenging
     retaking scenarios.
   </div>
+  </details>
 
 </div>
 
@@ -215,49 +220,42 @@
     target trajectory while preserving scene dynamics.
   </p>
 
-  <!-- Method header row -->
-  <div class="method-cols comparison-header" style="margin-bottom:0.5rem;">
-    <div class="method-col">
-      <span class="method-label label-baseline">ReCamMaster</span>
-    </div>
-    <div class="method-col">
-      <span class="method-label label-baseline">ReDirector</span>
-    </div>
-    <div class="method-col">
-      <span class="method-label label-baseline">TrajectoryCrafter</span>
-    </div>
-    <div class="method-col ours-col">
-      <span class="method-label label-ours">Ours (SierpinskiCam)</span>
-    </div>
-  </div>
 
   <div class="comparison-stack">
     <div class="method-cols comparison-row">
       <div class="method-col">
+        <span class="method-label label-baseline">ReCamMaster</span>
         <img src="assets/media/comparison_gif/recam/bmx-trees.gif" alt="ReCamMaster BMX Trees" />
       </div>
       <div class="method-col">
+        <span class="method-label label-baseline">ReDirector</span>
         <img src="assets/media/comparison_gif/redirector/bmx-trees.gif" alt="ReDirector BMX Trees" />
       </div>
       <div class="method-col">
+        <span class="method-label label-baseline">TrajectoryCrafter</span>
         <img src="assets/media/comparison_gif/trajc/bmx-trees.gif" alt="TrajectoryCrafter BMX Trees" />
       </div>
       <div class="method-col ours-col">
+        <span class="method-label label-ours">Ours (SierpinskiCam)</span>
         <img src="assets/media/main_gif/bmx-trees.gif" alt="Ours BMX Trees" />
       </div>
     </div>
 
     <div class="method-cols comparison-row">
       <div class="method-col">
+        <span class="method-label label-baseline">ReCamMaster</span>
         <img src="assets/media/comparison_gif/recam/horsejump-high.gif" alt="ReCamMaster Horsejump" />
       </div>
       <div class="method-col">
+        <span class="method-label label-baseline">ReDirector</span>
         <img src="assets/media/comparison_gif/redirector/horsejump-high.gif" alt="ReDirector Horsejump" />
       </div>
       <div class="method-col">
+        <span class="method-label label-baseline">TrajectoryCrafter</span>
         <img src="assets/media/comparison_gif/trajc/horsejump-high.gif" alt="TrajectoryCrafter Horsejump" />
       </div>
       <div class="method-col ours-col">
+        <span class="method-label label-ours">Ours (SierpinskiCam)</span>
         <img src="assets/media/main_gif/horsejump-high-cam6.gif" alt="Ours Horsejump" />
       </div>
     </div>
