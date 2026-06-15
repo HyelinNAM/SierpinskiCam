@@ -40,12 +40,10 @@ SierpinskiCam/
     cache_text.py                         # prompt/text-encoder cache helper
     run_sierpinskicam_inference.py         # one-video or batch inference
   checkpoints/                              # local checkpoint workspace; weights are git-ignored
-  docs/                                    # static SierpinskiCam project page
   data/                                    # local generated conditioning/text-cache workspace (git-ignored)
   outputs/                                 # generated videos/latents (git-ignored)
 ```
 
-The `docs/` folder is the deployable static project page. Runtime instructions live in this root README.
 
 ## Installation
 
@@ -63,10 +61,25 @@ pip install -r requirements.txt
 
 `requirements.txt` installs this repository, the Wan/Musubi inference dependencies, Depth-Anything-3, and the small conditioning helpers. If your machine uses a different CUDA version, edit the two PyTorch lines at the top of `requirements.txt` before installing.
 
-To regenerate conditioning from the sample videos, also point the script to the TrajectoryCrafter code directory that contains `utils.Warper`. In the original TrajectoryCrafter checkout, this is usually the `models/` directory, so the path should contain `utils.py` or a `utils/` module with `Warper`:
+### TrajectoryCrafter code path for conditioning generation
+
+`create_sierpinskicam_conditioning.py` needs one utility from TrajectoryCrafter: `utils.Warper`. SierpinskiCam uses it during **preprocessing** to warp the source video and Sierpinski dome texture into the target camera views, producing the `dense_tx` conditioning videos consumed by inference. This is a code dependency for generating conditioning; it is not a TrajectoryCrafter checkpoint dependency.
+
+Clone TrajectoryCrafter next to this repository, then point SierpinskiCam to the TrajectoryCrafter code directory that contains `utils.Warper`. In the upstream layout this is usually the `models/` directory:
 
 ```bash
-export TRAJECTORYCRAFTER_PATH=/path/to/TrajectoryCrafter/models
+# From the parent directory that contains SierpinskiCam/
+git clone https://github.com/TrajectoryCrafter/TrajectoryCrafter.git
+
+cd SierpinskiCam
+export TRAJECTORYCRAFTER_PATH="../TrajectoryCrafter/models"
+```
+
+The path is correct if it contains `utils.py` or a `utils/` module defining `Warper`. You can also pass it directly instead of exporting the variable:
+
+```bash
+python scripts/create_sierpinskicam_conditioning.py \
+  --trajectorycrafter-path ../TrajectoryCrafter/models
 ```
 
 If you only run inference from already generated `data/conditioning/...` folders, TrajectoryCrafter and Depth-Anything-3 are not used at inference time.
@@ -144,6 +157,14 @@ The conditioning script reads videos directly and uses the first `--frame-count`
 The Sierpinski dome texture is self-contained in `example_test_data/textures/sierpinski_dome_16x16_2048.png` and is used by default via `--texture-path`.
 
 ### 3. Generate SierpinskiCam conditioning/data
+
+This step creates the geometry-guided inputs used by SierpinskiCam inference:
+
+- `rgb`: the source/reference video copied into the conditioning layout
+- `dense_tx`: target-view conditioning rendered by combining source warps with Sierpinski dome texture cues
+- `img`: the first-frame image condition
+
+It requires `TRAJECTORYCRAFTER_PATH` because the script imports TrajectoryCrafter's `Warper` utility to perform the camera/depth-based warping. Set it as described in the installation section, then run:
 
 ```bash
 python scripts/create_sierpinskicam_conditioning.py \
