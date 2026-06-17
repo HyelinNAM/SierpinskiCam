@@ -4,12 +4,13 @@ Official inference code release for the SierpinskiCam.
 
 **[SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues](https://arxiv.org/abs)**
 
-<img src="assets/media/sierpinskicam-teaser.gif" alt="SierpinskiCam teaser" width="520">
-
 [Suttisak Wizadwongsa*](), [Hyelin Nam*](https://hyelinnam.github.io/), [Supasorn Suwajanakorn](https://www.supasorn.com/), [Jeong Joon Park](https://jjparkcv.github.io/)
 
-
 [![Project Website](https://img.shields.io/badge/Project-Website-blue)](https://hyelinnam.github.io/SierpinskiCam/) [![arXiv](https://img.shields.io/badge/arXiv-2606.17310-b31b1b.svg)](https://arxiv.org/abs/2606.17310)
+
+
+<img src="assets/media/sierpinskicam-teaser.gif" alt="SierpinskiCam teaser" width="520">
+
 
 ## Abstract
 Generating novel renderings of a scene along user-defined camera trajectories from a single monocular video, dubbed video retaking, is a compelling but difficult problem in content creation and visual effects. Existing geometry-guided approaches reconstruct a 4D representation from the source video and render it along the target trajectory to condition video diffusion models. However, this guidance degrades as the target camera departs from the source trajectory, leaving newly revealed regions sparse or entirely missing. We propose SierpinskiCam, which addresses this limitation by augmenting geometry-based guidance with Sierpinski dome texture cues that contains rich trackable features even under large viewpoint changes. We further introduce a reference video conditioning mechanism that appends source-video tokens to the target-token sequence and separates the two streams with negative RoPE indices, enabling appearance grounding without architectural modification or per-video adaptation. Extensive experiments show that SierpinskiCam achieves significant gains in camera controllability, geometric consistency, and video quality across diverse and challenging retaking scenarios.
