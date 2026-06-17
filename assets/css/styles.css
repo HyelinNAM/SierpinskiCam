@@ -130,7 +130,7 @@
     /* ── Section layout ───────────────────────── */
     .content-section {
       padding: 4rem 1.5rem;
-      max-width: 1000px;
+      max-width: calc(1000px + 3rem);
       margin: 0 auto;
     }
 
