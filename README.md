@@ -282,4 +282,11 @@ We thank the authors and maintainers of [Musubi Tuner](https://github.com/kohya-
 
 ## Citation
 
-If you find this work useful, please consider citing SierpinskiCam. BibTeX coming soon.
+```
+@article{wizadwongsa2026sierpinskicam,
+  title={SierpinskiCam: Camera-Controlled Video Retaking with Sierpinski Triangle Pattern Cues},
+  author={Wizadwongsa, Suttisak and Nam, Hyelin and Suwajanakorn, Supasorn and Park, Jeong Joon},
+  journal={arXiv preprint arXiv:2606.17310},
+  year={2026}
+}
+```
