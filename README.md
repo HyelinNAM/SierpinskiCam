@@ -9,7 +9,7 @@ Official inference code release for the SierpinskiCam.
 [![Project Website](https://img.shields.io/badge/Project-Website-blue)](https://hyelinnam.github.io/SierpinskiCam/) [![arXiv](https://img.shields.io/badge/arXiv-2606.17310-b31b1b.svg)](https://arxiv.org/abs/2606.17310)
 
 
-<img src="assets/media/sierpinskicam-teaser.gif" alt="SierpinskiCam teaser" width="520">
+<img src="assets/media/sierpinskicam-teaser-v2.gif" alt="SierpinskiCam teaser" width="520">
 
 
 ## Abstract
