@@ -272,9 +272,10 @@ Useful inference options:
 - `--no-save-inputs`: skip copying selected `rgb`, `dense_tx`, and `img` inputs into the output folder
 - `--check-only`: validate paths and exit before CUDA/model imports
 
-## License
+## License and Commercial Use
 
-This code is released under the Apache-2.0 license. Model checkpoints are distributed separately; follow the license terms of each downloaded checkpoint.
+This code is released under the custom license provided in `LICENSE.txt`.
+If you work at a company or are interested in commercial use of this code, please contact jjparkcv@umich.edu.
 
 ## Acknowledgements
 
