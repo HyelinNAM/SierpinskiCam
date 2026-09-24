@@ -1,4 +1,4 @@
-# SierpinskiCam
+# [NeurIPS 2026 🦘] SierpinskiCam
 
 Official inference code release for the SierpinskiCam.
 
